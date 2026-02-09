@@ -110,6 +110,27 @@ final class BloomFilter private (
     }
     true
   }
+
+  /** Write this filter's state to a [[java.io.DataOutputStream]] for compact binary serialization. */
+  def writeTo(dos: java.io.DataOutputStream): Unit = {
+    dos.writeInt(numBits)
+    dos.writeInt(numHashes)
+    dos.writeInt(bits.length)
+    var i = 0
+    while (i < bits.length) {
+      dos.writeLong(bits(i))
+      i += 1
+    }
+  }
+
+  /** Serialize to a self-contained byte array. */
+  def toBytes: Array[Byte] = {
+    val baos = new java.io.ByteArrayOutputStream(12 + bits.length * 8)
+    val dos = new java.io.DataOutputStream(baos)
+    writeTo(dos)
+    dos.flush()
+    baos.toByteArray
+  }
 }
 
 object BloomFilter {
@@ -165,5 +186,24 @@ object BloomFilter {
       i += 1
     }
     filter
+  }
+
+  /** Reconstruct a BloomFilter from a [[java.io.DataInputStream]] (written by [[BloomFilter.writeTo]]). */
+  def readFrom(dis: java.io.DataInputStream): BloomFilter = {
+    val numBits = dis.readInt()
+    val numHashes = dis.readInt()
+    val bitsLen = dis.readInt()
+    val bits = new Array[Long](bitsLen)
+    var i = 0
+    while (i < bitsLen) {
+      bits(i) = dis.readLong()
+      i += 1
+    }
+    new BloomFilter(bits, numBits, numHashes)
+  }
+
+  /** Reconstruct from a byte array (written by [[BloomFilter.toBytes]]). */
+  def fromBytes(bytes: Array[Byte]): BloomFilter = {
+    readFrom(new java.io.DataInputStream(new java.io.ByteArrayInputStream(bytes)))
   }
 }
