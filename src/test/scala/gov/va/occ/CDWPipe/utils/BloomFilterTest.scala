@@ -6,7 +6,7 @@ import scala.collection.mutable.ArrayBuffer
 
 class BloomFilterTest extends AnyFunSuite {
   test("BloomFilter has no false negatives for inserted Ints") {
-    val buf = ArrayBuffer.from(0 until 5000)
+    val buf = Array.from(0 until 5000)
     val bloom = BloomFilter.fromInts(buf.toArray, fpp = 1e-3)
 
     var i = 0
@@ -17,7 +17,7 @@ class BloomFilterTest extends AnyFunSuite {
   }
 
   test("BloomFilter reduces misses (typically) for absent Ints") {
-    val buf = ArrayBuffer.from(0 until 5000)
+    val buf = Array.from(0 until 5000)
     val bloom = BloomFilter.fromInts(buf.toArray, fpp = 1e-2)
 
     // False positives are possible, so we can't assert 0.
@@ -28,7 +28,7 @@ class BloomFilterTest extends AnyFunSuite {
   }
 
   test("BinarySearch + Bloom never misses inserted values") {
-    val buf = ArrayBuffer.from(0 until 10000)
+    val buf = Array.from(0 until 10000)
     val bloom = BloomFilter.fromInts(buf.toArray, fpp = 1e-3)
 
     assert(BinarySearch.indexOfSortedIntWithBloom(buf, 1234, bloom) == 1234)

@@ -29,7 +29,7 @@ object BinarySearch {
 		*
 		* Note: uses `==` equality.
 		*/
-	def indexOfLinear[T](buf: ArrayBuffer[T], value: T): Int = {
+	def indexOfLinear[T](buf: Array[T], value: T): Int = {
 		var i = 0
 		val n = buf.length
 		while (i < n) {
@@ -40,13 +40,13 @@ object BinarySearch {
 	}
 
 	/**
-		* Binary search on an ascending-sorted `ArrayBuffer[Int]`.
+		* Binary search on an ascending-sorted `Array[Int]`.
 		*
 		* Java/Scala stdlib convention:
 		* - If found: returns index >= 0.
 		* - If not found: returns `-(insertionPoint + 1)`.
 		*/
-	def binarySearchInt(buf: ArrayBuffer[Int], value: Int): Int = {
+	def binarySearchInt(buf: Array[Int], value: Int): Int = {
 		var lo = 0
 		var hi = buf.length - 1
 
@@ -62,7 +62,7 @@ object BinarySearch {
 	}
 
 	/** Returns the index of `value` in sorted `buf`, or -1 if not found. */
-	def indexOfSortedInt(buf: ArrayBuffer[Int], value: Int, linearThreshold: Int = DefaultLinearThreshold): Int = {
+	def indexOfSortedInt(buf: Array[Int], value: Int, linearThreshold: Int = DefaultLinearThreshold): Int = {
 		val n = buf.length
 		if (n <= 0) return -1
 		if (n <= linearThreshold) return indexOfLinear(buf, value)
@@ -75,7 +75,7 @@ object BinarySearch {
 		* Returns the first index i such that buf(i) >= value.
 		* If all elements are < value, returns buf.length.
 		*/
-	def lowerBoundInt(buf: ArrayBuffer[Int], value: Int): Int = {
+	def lowerBoundInt(buf: Array[Int], value: Int): Int = {
 		var lo = 0
 		var hi = buf.length
 		while (lo < hi) {
@@ -90,7 +90,7 @@ object BinarySearch {
 		* Returns the first index i such that buf(i) > value.
 		* If no elements are > value, returns buf.length.
 		*/
-	def upperBoundInt(buf: ArrayBuffer[Int], value: Int): Int = {
+	def upperBoundInt(buf: Array[Int], value: Int): Int = {
 		var lo = 0
 		var hi = buf.length
 		while (lo < hi) {
@@ -106,7 +106,7 @@ object BinarySearch {
 		* Useful when the sought value is likely near the beginning.
 		* Returns index or -1.
 		*/
-	def indexOfExponentialInt(buf: ArrayBuffer[Int], value: Int, linearThreshold: Int = DefaultLinearThreshold): Int = {
+	def indexOfExponentialInt(buf: Array[Int], value: Int, linearThreshold: Int = DefaultLinearThreshold): Int = {
 		val n = buf.length
 		if (n == 0) return -1
 		if (n <= linearThreshold) return indexOfLinear(buf, value)
@@ -137,8 +137,8 @@ object BinarySearch {
 		-1
 	}
 
-	/** Binary search on an ascending-sorted `ArrayBuffer[Long]` with insertion-point semantics. */
-	def binarySearchLong(buf: ArrayBuffer[Long], value: Long): Int = {
+	/** Binary search on an ascending-sorted `Array[Long]` with insertion-point semantics. */
+	def binarySearchLong(buf: Array[Long], value: Long): Int = {
 		var lo = 0
 		var hi = buf.length - 1
 		while (lo <= hi) {
@@ -151,7 +151,7 @@ object BinarySearch {
 		-(lo + 1)
 	}
 
-	def indexOfSortedLong(buf: ArrayBuffer[Long], value: Long, linearThreshold: Int = DefaultLinearThreshold): Int = {
+	def indexOfSortedLong(buf: Array[Long], value: Long, linearThreshold: Int = DefaultLinearThreshold): Int = {
 		val n = buf.length
 		if (n == 0) return -1
 		if (n <= linearThreshold) {
@@ -171,7 +171,7 @@ object BinarySearch {
 		* Generic binary search for ascending-sorted buffers.
 		* Prefer the Int/Long specializations in hot paths.
 		*/
-	def binarySearch[T](buf: ArrayBuffer[T], value: T)(implicit ord: Ordering[T]): Int = {
+	def binarySearch[T](buf: Array[T], value: T)(implicit ord: Ordering[T]): Int = {
 		var lo = 0
 		var hi = buf.length - 1
 		while (lo <= hi) {
@@ -185,7 +185,7 @@ object BinarySearch {
 		-(lo + 1)
 	}
 
-	def indexOfSorted[T](buf: ArrayBuffer[T], value: T, linearThreshold: Int = DefaultLinearThreshold)(implicit
+	def indexOfSorted[T](buf: Array[T], value: T, linearThreshold: Int = DefaultLinearThreshold)(implicit
 			ord: Ordering[T]
 	): Int = {
 		val n = buf.length
@@ -204,7 +204,7 @@ object BinarySearch {
 		*   If `buf` changes and bloom isn't updated, you can introduce false negatives.
 		*/
 	def indexOfSortedIntWithBloom(
-			buf: ArrayBuffer[Int],
+			buf: Array[Int],
 			value: Int,
 			bloom: BloomFilter,
 			linearThreshold: Int = DefaultLinearThreshold
@@ -216,7 +216,7 @@ object BinarySearch {
 	/**
 		* For unsorted buffers, Bloom + linear search is often a big win when most lookups are misses.
 		*/
-	def indexOfUnsortedIntWithBloom(buf: ArrayBuffer[Int], value: Int, bloom: BloomFilter): Int = {
+	def indexOfUnsortedIntWithBloom(buf: Array[Int], value: Int, bloom: BloomFilter): Int = {
 		if (!bloom.mightContainInt(value)) return -1
 		indexOfLinear(buf, value)
 	}

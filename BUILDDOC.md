@@ -14,4 +14,4 @@
 
 ## Data structures
 - Index
- - Index dataframe (do we want to keep this as an dataframe or arrayBuffer)
+ - Index dataframe (keep as array)
