@@ -1,0 +1,39 @@
+bundle:
+  name: cdwpipe
+
+# Databricks Asset Bundles targets.
+# If you see "no target specified", it means this file is missing targets
+# or you didn’t pass `-t <target>` on the CLI.
+
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://YOUR_DATABRICKS_WORKSPACE_URL
+
+# Optional: define the JAR we build with sbt-assembly.
+artifacts:
+  cdwpipe_jar:
+    # Run `sbt clean assembly` before bundle deploy/run.
+    # The build command is executed locally.
+    path: .
+    executable: cmd
+    build: |
+      sbt clean assembly
+    files:
+      - source: ./target/scala-2.13/CDWPipe_2.13-0.1.0-SNAPSHOT.jar
+
+resources:
+  jobs:
+    cdwpipe_job:
+      name: CDWPipe (Jar)
+      tasks:
+        - task_key: run
+          spark_jar_task:
+            main_class_name: gov.va.occ.CDWPipe.Main
+          libraries:
+            - jar: ./target/scala-2.13/CDWPipe_2.13-0.1.0-SNAPSHOT.jar
+          new_cluster:
+            spark_version: 16.4.x-scala2.13
+            node_type_id: Standard_DS3_v2
+            num_workers: 1

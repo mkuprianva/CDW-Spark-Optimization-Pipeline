@@ -1,0 +1,11 @@
+# sbt
+project/target/
+target/
+.metals/
+.bloop/
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
